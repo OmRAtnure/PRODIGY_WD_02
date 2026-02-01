@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Stopwatch</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #a257b9;
+        font-family: 'Segoe UI', sans-serif;
+        color: #ffffff;
+    }
+
+    .container {
+        text-align: center;
+    }
+
+    h1 {
+        font-weight: 400;
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+        opacity: 0.8;
+    }
+
+    .time {
+        font-family: 'Courier New', monospace; /* monospaced */
+        font-size: 96px;
+        font-weight: 600;
+        letter-spacing: 4px;
+        margin-bottom: 40px;
+
+        width: 520px;                 /* fixed width */
+        text-align: center;
+        font-variant-numeric: tabular-nums; /* equal digit width */
+    }
+
+    .controls button {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+        padding: 12px 28px;
+        margin: 8px;
+        font-size: 16px;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    .controls button:hover {
+        background: white;
+        color: #0f172a;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 30px;
+        max-height: 160px;
+        overflow-y: auto;
+        opacity: 0.85;
+    }
+
+    li {
+        font-size: 16px;
+        margin-bottom: 6px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>STOPWATCH</h1>
+
+    <div class="time" id="display">00:00:00</div>
+
+    <div class="controls">
+        <button onclick="start()">Start</button>
+        <button onclick="pause()">Pause</button>
+        <button onclick="lap()">Lap</button>
+        <button onclick="reset()">Reset</button>
+    </div>
+
+    <ul id="laps"></ul>
+</div>
+
+<script>
+    let timer = null;
+    let milliseconds = 0;
+    let running = false;
+
+    function updateDisplay() {
+        let ms = milliseconds % 100;
+        let totalSeconds = Math.floor(milliseconds / 100);
+        let seconds = totalSeconds % 60;
+        let minutes = Math.floor(totalSeconds / 60);
+
+        document.getElementById("display").innerText =
+            `${String(minutes).padStart(2, '0')}:` +
+            `${String(seconds).padStart(2, '0')}:` +
+            `${String(ms).padStart(2, '0')}`;
+    }
+
+    function start() {
+        if (!running) {
+            running = true;
+            timer = setInterval(() => {
+                milliseconds++;
+                updateDisplay();
+            }, 10);
+        }
+    }
+
+    function pause() {
+        running = false;
+        clearInterval(timer);
+    }
+
+    function reset() {
+        pause();
+        milliseconds = 0;
+        updateDisplay();
+        document.getElementById("laps").innerHTML = "";
+    }
+
+    function lap() {
+        if (running) {
+            const li = document.createElement("li");
+            li.textContent = document.getElementById("display").innerText;
+            document.getElementById("laps").appendChild(li);
+        }
+    }
+</script>
+
+</body>
+</html>
